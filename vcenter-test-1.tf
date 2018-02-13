@@ -26,6 +26,11 @@ data "vsphere_network" "network" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
+data "vsphere_template" "template" {
+  name          = Morpheus Ubuntu 16.04.3 v1"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
 resource "vsphere_virtual_machine" "vm" {
   name             = "terraform-test"
   resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
@@ -39,10 +44,13 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   disk {
-    template = "Morpheus Ubuntu 16.04.3 v1"
-    label = "disk0"
-    type = "thin"
+    name = "disk0"
+    thin_provisioned = true
     size  = 20
+  }
+
+  clone {
+    template_uuid = "${data.vsphere_template.template.id}"
   }
 
 }
