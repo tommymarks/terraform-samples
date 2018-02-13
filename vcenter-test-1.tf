@@ -2,7 +2,7 @@ provider "vsphere" {
   user           = "${var.cloudUsername}"
   password       = "${var.cloudPassword}"
   vsphere_server = "${var.cloudUrl}"
-
+  version = "~> 1.3"
   # if you have a self-signed cert
   allow_unverified_ssl = true
 }
@@ -39,7 +39,10 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   disk {
+    template = "Morpheus Ubuntu 16.04.3 v1"
     label = "disk0"
+    type = "thin"
     size  = 20
   }
+
 }
