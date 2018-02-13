@@ -44,7 +44,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   disk {
-    name = "disk0"
+    label = "disk0"
     thin_provisioned = true
     size  = 20
   }
