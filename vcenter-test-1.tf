@@ -26,7 +26,7 @@ data "vsphere_network" "network" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_template" "template" {
+data "vsphere_virtual_machine" "template" {
   name = "Morpheus Ubuntu 16.04.3 v1"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
@@ -50,7 +50,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   clone {
-    template_uuid = "${data.vsphere_template.template.id}"
+    template_uuid = "${data.vsphere_virtual_machine.template.id}"
   }
 
 }
