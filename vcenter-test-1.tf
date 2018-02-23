@@ -52,6 +52,12 @@ resource "vsphere_virtual_machine" "terraform-test-1" {
   clone {
     template_uuid = "${data.vsphere_virtual_machine.template.id}"
   }
+
+  connection {
+    type = "ssh"
+    user = "root"
+    password = "m0rp#3us!"
+  }
 }
 
 resource "vsphere_virtual_machine" "terraform-test-2" {
@@ -74,5 +80,11 @@ resource "vsphere_virtual_machine" "terraform-test-2" {
 
   clone {
     template_uuid = "${data.vsphere_virtual_machine.template.id}"
+  }
+
+  connection {
+    type = "ssh"
+    user = "root"
+    password = "m0rp#3us!"
   }
 }
