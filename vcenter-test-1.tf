@@ -55,7 +55,7 @@ resource "vsphere_virtual_machine" "terraform-test-1" {
 
   connection {
     type = "ssh"
-    user = "root"
+    user = "cloud-user"
     password = "m0rp#3us!"
   }
 }
@@ -84,7 +84,7 @@ resource "vsphere_virtual_machine" "terraform-test-2" {
 
   connection {
     type = "ssh"
-    user = "root"
+    user = "cloud-user"
     password = "m0rp#3us!"
   }
 }
