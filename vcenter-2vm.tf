@@ -2,7 +2,7 @@ provider "vsphere" {
   user           = "${var.cloudUsername}"
   password       = "${var.cloudPassword}"
   vsphere_server = "${var.cloudUrl}"
-  version = "~> 1.3.0"
+  version        = "~> 1.3.0"
   # if you have a self-signed cert
   allow_unverified_ssl = true
 }
@@ -12,12 +12,12 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "labs-qnap-240"
+  name = "labs-qa-qnap-240"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_resource_pool" "pool" {
-  name = "labs-den-prod-cluster/Resources"
+  name = "labs-den-qa-cluster/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
