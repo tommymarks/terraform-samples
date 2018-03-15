@@ -2,7 +2,7 @@ provider "vsphere" {
   user           = "${var.cloudUsername}"
   password       = "${var.cloudPassword}"
   vsphere_server = "${var.cloudUrl}"
-  version = "~> 1.3.0"
+  version        = "~> 1.3.0"
   # if you have a self-signed cert
   allow_unverified_ssl = true
 }
@@ -12,12 +12,12 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "labs-qnap-240"
+  name = "labs-qa-qnap-240"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_resource_pool" "pool" {
-  name = "labs-den-prod-cluster/Resources"
+  name = "labs-den-qa-cluster/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -31,8 +31,37 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-resource "vsphere_virtual_machine" "${var.instanceName}" {
-  name = "${var.instanceName}"
+resource "vsphere_virtual_machine" "tm-tf-git11" {
+  name = "tm-tf-git11"
+  resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
+  datastore_id = "${data.vsphere_datastore.datastore.id}"
+  num_cpus = 2
+  memory = 1024
+  guest_id = "ubuntu64Guest"
+
+  network_interface {
+    network_id = "${data.vsphere_network.network.id}"
+  }
+
+  disk {
+    label = "disk0"
+    thin_provisioned = true
+    size  = 20
+  }
+
+  clone {
+    template_uuid = "${data.vsphere_virtual_machine.template.id}"
+  }
+
+  connection {
+    type = "ssh"
+    user = "cloud-user"
+    password = "m0rp#3us!"
+  }
+}
+
+resource "vsphere_virtual_machine" "tm-tf-git12" {
+  name = "tm-tf-git12"
   resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
   datastore_id = "${data.vsphere_datastore.datastore.id}"
   num_cpus = 1
@@ -44,7 +73,7 @@ resource "vsphere_virtual_machine" "${var.instanceName}" {
   }
 
   disk {
-    label = "disk0"
+    label = "os"
     thin_provisioned = true
     size  = 10
   }
