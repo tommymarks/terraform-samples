@@ -55,8 +55,8 @@ resource "vsphere_virtual_machine" "tm-tf-git11" {
 
   connection {
     type = "ssh"
-    user = "cloud-user"
-    password = "m0rp#3us!"
+    user = "cloudinit"
+    password = "P@55w0rd!!"
   }
 }
 
