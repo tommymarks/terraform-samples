@@ -12,7 +12,7 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "labs-qa-qnap-240"
+  name = "morpheus-vmware-qa"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
