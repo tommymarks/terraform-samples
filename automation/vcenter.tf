@@ -27,7 +27,7 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name = "Morpheus Ubuntu 16.04.5 v1"
+  name = "qa-apache"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -55,8 +55,8 @@ resource "vsphere_virtual_machine" "vm1" {
 
   connection {
     type = "ssh"
-    user = "cloud-user"
-    password = "m0rp#3us!"
+    user = "cloudinit"
+    password = "P@55w0rd!!"
   }
 }
 
@@ -84,7 +84,7 @@ resource "vsphere_virtual_machine" "vm2" {
 
   connection {
     type = "ssh"
-    user = "cloud-user"
-    password = "m0rp#3us!"
+    user = "cloudinit"
+    password = "P@55w0rd!!"
   }
 }
