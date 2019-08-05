@@ -12,17 +12,17 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "morpheus-vmware-qa"
+  name = "vsanDatastore"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_resource_pool" "pool" {
-  name = "labs-den-qa-cluster/Resources"
+  name = "QA-vSAN/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "network" {
-  name = "VM Network"
+  name = "VLAN0002 - Internal Server"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
