@@ -9,7 +9,7 @@
           "value": "Standard_A2_v2"
         },
         "virtualNetworkName": {
-          "value": "bobvnet"
+          "value": "morph-qa-net"
         },
         "networkSecurityGroupName": {
           "value": "BertramLabs"
