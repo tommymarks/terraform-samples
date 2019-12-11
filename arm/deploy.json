@@ -50,11 +50,11 @@
     },
     "diagnosticsStorageAccountName": {
       "type": "string",
-      "defaultValue": "bobstesting"
+      "defaultValue": "morphqastorage"
     },
     "diagnosticsStorageAccountId": {
       "type": "string",
-      "defaultValue": "/subscriptions/88213e1e-d4c5-467f-b029-fa3072281a98/resourceGroups/bobstestresourceg/providers/Microsoft.Storage/storageAccounts/bobstesting"
+      "defaultValue": "/subscriptions/88213e1e-d4c5-467f-b029-fa3072281a98/resourceGroups/morph-qa/providers/Microsoft.Storage/storageAccounts/morphqastorage"
     },
     "subnetName": {
       "type": "string",
@@ -70,7 +70,7 @@
     }
   },
   "variables": {
-    "vnetId": "[resourceId('bobstestresourceg','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "vnetId": "[resourceId('morph-qa','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
   },
   "resources": [
@@ -119,7 +119,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[reference(resourceId('bobstestresourceg', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+            "storageUri": "[reference(resourceId('morph-qa', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
           }
         }
       }
@@ -142,13 +142,13 @@
               },
               "privateIPAllocationMethod": "Dynamic",
               "publicIpAddress": {
-                "id": "[resourceId('bobstestresourceg','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+                "id": "[resourceId('morph-qa','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
               }
             }
           }
         ],
         "networkSecurityGroup": {
-          "id": "[resourceId('bobstestresourceg', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+          "id": "[resourceId('morph-qa', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
         }
       }
     },
