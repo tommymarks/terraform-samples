@@ -49,7 +49,7 @@
     "AWSRegion2AMI" : {
       "us-east-1"        : {"Windows2008r2" : "ami-098be1db577d54f7e", "Windows2012r2" : "ami-07355e1e938a6b6cb"},
       "us-west-2"        : {"Windows2008r2" : "ami-07f76266740e462c2", "Windows2012r2" : "ami-0517a67560b489096"},
-      "us-west-1"        : {"Windows2008r2" : "ami-0bdcb8195d253275d", "Windows2012r2" : "ami-05a73262eae22178d"}
+      "us-west-1"        : {"Windows2008r2" : "ami-0bd0a2527e4bb5226", "Windows2012r2" : "ami-02ad1ae3d4204b530"}
     }
 
   },
