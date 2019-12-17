@@ -136,7 +136,7 @@
       
       "Properties": {
         "InstanceType" : { "Ref" : "InstanceType" },
-        "ImageId" : "ami-0bdcb8195d253275d",
+        "ImageId" : "ami-0bd0a2527e4bb5226",
         "SecurityGroups" : [ {"Ref" : "InstanceSecurityGroup"} ],
         "KeyName" : { "Ref" : "KeyName" },
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
