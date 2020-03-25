@@ -1,0 +1,3 @@
+hello there.
+the content of this email was pulled from a text file in a github repository.
+pretty neat, eh?
