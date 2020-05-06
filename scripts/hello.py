@@ -1,3 +1,4 @@
+import mechanize
 from pprint import pprint
 import sys
 pprint(sys.argv)
