@@ -1,9 +1,11 @@
+terraform {
+  required_version = ">= 0.12"
+}
+
 provider "vsphere" {
   user           = "${var.cloudUsername}"
   password       = "${var.cloudPassword}"
   vsphere_server = "${var.cloudUrl}"
-  version        = "~> 1.3.0"
-  # if you have a self-signed cert
   allow_unverified_ssl = true
 }
 
