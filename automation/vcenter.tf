@@ -7,7 +7,7 @@ provider "vsphere" {
   password       = var.cloudPassword
   vsphere_server = var.cloudUrl
   allow_unverified_ssl = true
-  version        = “~> 1.11.0”
+  version        = "~> 1.11.0"
 }
 
 data "vsphere_datacenter" "dc" {
