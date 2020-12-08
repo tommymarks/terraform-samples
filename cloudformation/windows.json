@@ -46,8 +46,8 @@
   },
 
   "Mappings" : {
-    "AWSRegion2AMI" : {
-      "us-west-1"        : {"Windows2019" : "ami-08bcc13ad2c143073", "Windows2012r2" : "ami-060a37a22181acf41"}
+    "AWSRegion2" : {
+      "us-west-1"        : {"Windows2019" : "ami-0f98ff6e3a7e950b8", "Windows2012r2" : "ami-060a37a22181acf41"}
     }
 
   },
@@ -134,7 +134,7 @@
       
       "Properties": {
         "InstanceType" : { "Ref" : "InstanceType" },
-        "ImageId" : "ami-08bcc13ad2c143073",
+        "ImageId" : "ami-0f98ff6e3a7e950b8",
         "SecurityGroups" : [ {"Ref" : "InstanceSecurityGroup"} ],
         "KeyName" : { "Ref" : "KeyName" },
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
