@@ -19,7 +19,7 @@ data "vsphere_datastore" "datastore" {
 }
 
 data "vsphere_resource_pool" "pool" {
-  name = "QA-vSAN/Tests"
+  name = "QA-vSAN/Resources"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
