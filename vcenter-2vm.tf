@@ -63,7 +63,7 @@ resource "vsphere_virtual_machine" "vm1" {
 }
 
 resource "vsphere_virtual_machine" "vm2" {
-  name = "tauto-vmw-terra-git2"
+  name = "auto-vmw-terra-git2"
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id = data.vsphere_datastore.datastore.id
   num_cpus = 1
