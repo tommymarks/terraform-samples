@@ -1,0 +1,200 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "instanceCount": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of VM instances (6 or less)."
+      },
+      "defaultValue": 1,
+      "maxValue": 3
+    },
+    "virtualMachineName": {
+      "type": "string",
+      "defaultValue": "qa-armspec",
+      "metadata": {
+        "description": "Name of Virtual Machine"
+      }
+    },
+    "networkInterfaceName": {
+      "type": "string",
+      "defaultValue": "qa-armspec-nic",
+      "metadata": {
+        "description": "Name of Network Interface"
+      }
+    },
+    "publicIpAddressName": {
+      "type": "string",
+      "defaultValue": "qa-armspec-ip",
+      "metadata": {
+        "description": "Name of IP Address"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "tommy",
+      "metadata": {
+        "description": "OS Username"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "OS Password"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "westus"
+    },
+    "virtualMachineSize": {
+      "type": "string",
+      "defaultValue": "Standard_A1_v2"
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "morph-qa-net"
+    },
+    "networkSecurityGroupName": {
+      "type": "string",
+      "defaultValue": "BertramLabs"
+    },
+    "diagnosticsStorageAccountName": {
+      "type": "string",
+      "defaultValue": "morphqastorage"
+    },
+    "diagnosticsStorageAccountId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/88213e1e-d4c5-467f-b029-fa3072281a98/resourceGroups/morph-qa/providers/Microsoft.Storage/storageAccounts/morphqastorage"
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "default"
+    },
+    "publicIpAddressType": {
+      "type": "string",
+      "defaultValue": "Dynamic"
+    },
+    "publicIpAddressSku": {
+      "type": "string",
+      "defaultValue": "Basic"
+    }
+  },
+  "variables": {
+    "vnetId": "[resourceId('morph-qa','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
+    "nodesSuffixes": [
+      "001",
+      "002",
+      "003"
+    ]
+  },
+  "resources": [
+    {
+      "name": "[concat(parameters('virtualMachineName'), variables('nodesSuffixes')[copyIndex()])]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()])]"
+      ],
+      "copy": {
+        "name": "vmcopy",
+        "count": "[parameters('instanceCount')]"
+      },
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('virtualMachineName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "fromImage",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            }
+          },
+          "dataDisks": []
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()]))]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(resourceId('morph-qa', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()])]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()])]"
+      ],
+      "copy": {
+        "name": "ifacecopy",
+        "count": "[parameters('instanceCount')]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId('morph-qa','Microsoft.Network/publicIpAddresses', concat(parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()]))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('morph-qa', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()])]",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2017-08-01",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "ipcopy",
+        "count": "[parameters('instanceCount')]"
+      },
+      "properties": {
+        "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+      },
+      "sku": {
+        "name": "[parameters('publicIpAddressSku')]"
+      }
+    }
+  ],
+  "outputs": {
+    "adminUsername": {
+      "type": "string",
+      "value": "[parameters('adminUsername')]"
+    }
+  }
+}
