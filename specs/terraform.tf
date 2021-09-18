@@ -1,7 +1,7 @@
 variable "cloudUrl"       {default = "vcenter01.prod.dc2.den.morpheusdata.com"}
 variable "cloudUsername"  {}
 variable "cloudPassword"  {}
-variable "datacenterName" {default = "labs-denver-qa"}
+variable "datacenterName" {default = "labs-den-dc2-qa"}
 
 terraform {
   required_version = ">= 0.12"
@@ -19,12 +19,12 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "vsanDatastore"
+  name          = "ESXi-DC2-QA-LUN01"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_resource_pool" "pool" {
-  name          = "QA-vSAN/Resources"
+  name          = "QA"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
