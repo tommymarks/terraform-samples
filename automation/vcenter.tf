@@ -14,12 +14,12 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "vsanDatastore"
+  name = "ESXi-DC2-QA-LUN01"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_resource_pool" "pool" {
-  name = "QA-vSAN/Resources"
+  name = "QA"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
