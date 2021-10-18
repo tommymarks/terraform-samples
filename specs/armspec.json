@@ -2,51 +2,17 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "instanceCount": {
-      "type": "int",
-      "metadata": {
-        "description": "Number of VM instances (6 or less)."
-      },
-      "defaultValue": 1,
-      "maxValue": 3
-    },
-    "virtualMachineName": {
-      "type": "string",
-      "defaultValue": "qa-armspec",
-      "metadata": {
-        "description": "Name of Virtual Machine"
-      }
-    },
-    "networkInterfaceName": {
-      "type": "string",
-      "defaultValue": "qa-armspec-nic",
-      "metadata": {
-        "description": "Name of Network Interface"
-      }
-    },
-    "publicIpAddressName": {
-      "type": "string",
-      "defaultValue": "qa-armspec-ip",
-      "metadata": {
-        "description": "Name of IP Address"
-      }
-    },
-    "adminUsername": {
-      "type": "string",
-      "defaultValue": "tommy",
-      "metadata": {
-        "description": "OS Username"
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "OS Password"
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "westus"
+    },
+    "virtualMachineRG": {
+      "type": "string",
+      "defaultValue": "qatmpspec"
+    },
+    "virtualMachineName": {
+      "type": "string",
+      "defaultValue": "qa-tmpspec"
     },
     "virtualMachineSize": {
       "type": "string",
@@ -54,23 +20,23 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "morph-qa-net"
-    },
-    "networkSecurityGroupName": {
-      "type": "string",
-      "defaultValue": "BertramLabs"
-    },
-    "diagnosticsStorageAccountName": {
-      "type": "string",
-      "defaultValue": "morphqastorage"
-    },
-    "diagnosticsStorageAccountId": {
-      "type": "string",
-      "defaultValue": "/subscriptions/88213e1e-d4c5-467f-b029-fa3072281a98/resourceGroups/morph-qa/providers/Microsoft.Storage/storageAccounts/morphqastorage"
+      "defaultValue": "qa-tmpspec-vnet"
     },
     "subnetName": {
       "type": "string",
       "defaultValue": "default"
+    },
+    "networkInterfaceName": {
+      "type": "string",
+      "defaultValue":"qa-tmpspec-net"
+    },
+    "networkSecurityGroupName": {
+      "type": "string",
+      "defaultValue":"qa-tmpspec-nsg"
+    },
+    "publicIpAddressName": {
+      "type": "string",
+      "defaultValue": "qa-tmpspec-ip"
     },
     "publicIpAddressType": {
       "type": "string",
@@ -79,81 +45,35 @@
     "publicIpAddressSku": {
       "type": "string",
       "defaultValue": "Basic"
+    },
+    "osDiskType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS"
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "tommy"
+    },
+    "adminPassword": {
+      "type": "secureString"
     }
   },
   "variables": {
-    "vnetId": "[resourceId('morph-qa','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
-    "nodesSuffixes": [
-      "001",
-      "002",
-      "003"
-    ]
+    "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+    "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
   },
   "resources": [
     {
-      "name": "[concat(parameters('virtualMachineName'), variables('nodesSuffixes')[copyIndex()])]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2016-04-30-preview",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()])]"
-      ],
-      "copy": {
-        "name": "vmcopy",
-        "count": "[parameters('instanceCount')]"
-      },
-      "properties": {
-        "osProfile": {
-          "computerName": "[parameters('virtualMachineName')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "hardwareProfile": {
-          "vmSize": "[parameters('virtualMachineSize')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "Canonical",
-            "offer": "UbuntuServer",
-            "sku": "16.04-LTS",
-            "version": "latest"
-          },
-          "osDisk": {
-            "createOption": "fromImage",
-            "managedDisk": {
-              "storageAccountType": "Standard_LRS"
-            }
-          },
-          "dataDisks": []
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()]))]"
-            }
-          ]
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[reference(resourceId('morph-qa', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
-          }
-        }
-      }
-    },
-    {
-      "name": "[concat(parameters('networkInterfaceName'), variables('nodesSuffixes')[copyIndex()])]",
+      "name": "[parameters('networkInterfaceName')]",
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2016-09-01",
+      "apiVersion": "2019-07-01",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()])]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]"
       ],
-      "copy": {
-        "name": "ifacecopy",
-        "count": "[parameters('instanceCount')]"
-      },
       "properties": {
         "ipConfigurations": [
           {
@@ -164,30 +84,110 @@
               },
               "privateIPAllocationMethod": "Dynamic",
               "publicIpAddress": {
-                "id": "[resourceId('morph-qa','Microsoft.Network/publicIpAddresses', concat(parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()]))]"
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
               }
             }
           }
         ],
         "networkSecurityGroup": {
-          "id": "[resourceId('morph-qa', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+          "id": "[variables('nsgId')]"
         }
       }
     },
     {
-      "name": "[concat(parameters('publicIpAddressName'), variables('nodesSuffixes')[copyIndex()])]",
-      "type": "Microsoft.Network/publicIpAddresses",
-      "apiVersion": "2017-08-01",
+      "name": "[parameters('networkSecurityGroupName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-02-01",
       "location": "[parameters('location')]",
-      "copy": {
-        "name": "ipcopy",
-        "count": "[parameters('instanceCount')]"
-      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "qatmpspecsecgrouprule",
+            "properties": {
+              "priority": 300,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('virtualNetworkName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2019-09-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.4.2.0/24"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.4.2.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('publicIpAddressName')]",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2019-02-01",
+      "location": "[parameters('location')]",
       "properties": {
         "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
       },
       "sku": {
         "name": "[parameters('publicIpAddressSku')]"
+      }
+    },
+    {
+      "name": "[parameters('virtualMachineName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2019-07-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "fromImage",
+            "managedDisk": {
+              "storageAccountType": "[parameters('osDiskType')]"
+            }
+          },
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04-LTS",
+            "version": "latest"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "[parameters('virtualMachineName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        }
       }
     }
   ],
