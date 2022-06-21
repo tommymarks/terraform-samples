@@ -1,0 +1,2 @@
+output = "HELLO JAVASCRIPT"
+output
