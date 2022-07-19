@@ -47,7 +47,7 @@
 
   "Mappings" : {
     "AWSRegion2" : {
-      "us-west-1"        : {"Windows2019":"ami-060613661baf99fa5"}
+      "us-west-1"        : {"Windows2019":"ami-0c2286fc70b4c7941"}
     }
 
   },
@@ -134,7 +134,7 @@
       
       "Properties": {
         "InstanceType" : { "Ref" : "InstanceType" },
-        "ImageId" : "ami-060613661baf99fa5",
+        "ImageId" : "ami-0c2286fc70b4c7941",
         "SecurityGroups" : [ {"Ref" : "InstanceSecurityGroup"} ],
         "KeyName" : { "Ref" : "KeyName" },
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
