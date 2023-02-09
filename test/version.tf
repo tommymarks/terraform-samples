@@ -17,6 +17,12 @@ provider "random" {
 variable "deployment_name" {
   type = string
 }
+variable "instance_tags" {
+  type = object({
+    Name = string
+    Version = number
+  })
+}
 resource "random_pet" "dog" {
   keepers = {
     name = var.deployment_name
