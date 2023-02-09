@@ -31,3 +31,9 @@ resource "random_pet" "dog" {
 output "dog_name" {
   value = "${var.deployment_name}-dog: ${random_pet.dog.id}"
 }
+output "tag_name" {
+  value = "name-${var.instance_tags.Name}"
+}
+output "tag_version" {
+  value = "version-${var.instance_tags.Version}"
+}
