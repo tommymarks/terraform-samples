@@ -29,7 +29,7 @@ data "vsphere_resource_pool" "pool" {
 }
 
 data "vsphere_network" "network" {
-  name          = "VLAN0002 - Internal Server"
+  name          = "VLAN0043 - QA"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
