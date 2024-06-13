@@ -29,7 +29,7 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name = "qa-apache"
+  name = "auto-apache-vmdk"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
