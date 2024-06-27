@@ -50,11 +50,11 @@
     },
     "diagnosticsStorageAccountName": {
       "type": "string",
-      "defaultValue": "morphqastorage"
+      "defaultValue": "morpheusqastorage"
     },
     "diagnosticsStorageAccountId": {
       "type": "string",
-      "defaultValue": "/subscriptions/88213e1e-d4c5-467f-b029-fa3072281a98/resourceGroups/morph-qa/providers/Microsoft.Storage/storageAccounts/morphqastorage"
+      "defaultValue": "/subscriptions/ebfab192-9159-4811-86b3-27f08f5b8252/resourceGroups/morph-qa/providers/Microsoft.Storage/storageAccounts/morpheusqastorage"
     },
     "subnetName": {
       "type": "string",
