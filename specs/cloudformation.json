@@ -42,7 +42,7 @@
         "InstanceType":{"Ref":"InstanceType"},
         "SecurityGroups":[{"Ref":"InstanceSecurityGroup"}],
         "KeyName":{"Ref":"KeyName"},
-        "ImageId":"ami-0c447b6851502cd0d",
+        "ImageId":"ami-06a0a5cca72154c5c",
         "UserData":{
           "Fn::Base64":{
             "Fn::Join":[
